@@ -205,9 +205,10 @@ ${S.dec?`
   <p style="font-size:13px;color:${B.f};margin:0;">Escríbenos a: <strong>contacto@tudominio.com</strong></p>
 </div>`:""}
 ${S.gate&&!S.sent?`
-<div style="background:#fff;border:2px solid ${B.f};border-radius:12px;padding:1.25rem;margin-bottom:1rem;">
+<div id="contact-form" style="background:#fff;border:2px solid ${B.f};border-radius:12px;padding:1.25rem;margin-bottom:1rem;">
   <h3 style="font-size:16px;font-weight:500;margin:0 0 12px;">Completa tus datos para agendar la sesión</h3>
-  <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">Correo electrónico</span><input id="d-email" type="email" placeholder="tu@correo.com" value="${S.dp.email||''}"></label>
+  <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">Correo electrónico</span><input id="d-email" type="email" placeholder="tu@correo.com" value="${S.dp.email||S.ld.email}"></label>
+  <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">País</span><input type="text" value="${S.ld.country}" readonly style="background:#F3F4F6;cursor:not-allowed;"></label>
   ${[{k:"name",l:"Nombre completo",ph:"Tu nombre completo"},{k:"company",l:"Empresa u organización",ph:"Nombre de tu organización"},{k:"role",l:"Cargo o función",ph:"Ej: Gerente de sostenibilidad, Director financiero"}].map(f=>`<label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">${f.l}</span><input id="d-${f.k}" placeholder="${f.ph}" value="${S.dp[f.k]}"></label>`).join("")}
   <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">Teléfono o WhatsApp</span>
     <div style="display:flex;gap:6px;"><span style="background:#F3F4F6;border:1px solid #E5E7EB;border-radius:8px;padding:10px;font-size:13px;display:flex;align-items:center;">${pc}</span><input id="d-phone" type="tel" inputmode="numeric" placeholder="8888 8888" value="${S.dp.phone}"></div>
@@ -222,9 +223,9 @@ ${S.sent?`
 </div>`:""}
 <div style="text-align:center;padding:1rem 0 2rem;"><button id="rs" style="font-size:13px;color:#9CA3AF;background:none;border:none;">← Realizar otro diagnóstico</button></div>
 </div>`;
-const og=document.getElementById("og");if(og)og.onclick=()=>{S.gate=true;R()};
+const og=document.getElementById("og");if(og)og.onclick=()=>{S.gate=true;R();setTimeout(()=>{const form=document.getElementById("contact-form");if(form)form.scrollIntoView({behavior:"smooth",block:"center"})},100)};
 const dd=document.getElementById("dd");if(dd)dd.onclick=()=>{S.dec=true;R()};
-const em=document.getElementById("d-email");if(em)em.addEventListener("input",e=>S.dp.email=e.target.value);
+const em=document.getElementById("d-email");if(em){if(!S.dp.email&&S.ld.email)S.dp.email=S.ld.email;em.addEventListener("input",e=>S.dp.email=e.target.value)};
 ["name","company","role"].forEach(k=>{const el=document.getElementById("d-"+k);if(el)el.addEventListener("input",e=>S.dp[k]=e.target.value)});
 const ph=document.getElementById("d-phone");if(ph)ph.addEventListener("input",e=>{e.target.value=e.target.value.replace(/[^0-9\s]/g,"");S.dp.phone=e.target.value});
 const sd=document.getElementById("sd");if(sd)sd.onclick=()=>{const de=document.getElementById("de");if(!S.dp.email||!vE(S.dp.email)){de.textContent="Por favor ingresa un correo electrónico válido.";de.style.display="block";return}if(!S.dp.name||!S.dp.company){de.textContent="Por favor completa al menos tu nombre y empresa.";de.style.display="block";return}const cp=S.dp.phone.replace(/\s/g,"");if(cp&&cp.length<7){de.textContent="El número de teléfono debe tener al menos 7 dígitos.";de.style.display="block";return}S.sent=true;R()};
