@@ -180,4 +180,59 @@ $.innerHTML=`
   <p style="font-size:12px;color:#6B7280;margin:0 0 1rem;line-height:1.5;">Estimación basada en tus respuestas, evaluada contra los requisitos de divulgación de las normas NIIF S1 y S2.</p>
   <div style="background:${B.c}44;border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:#555;line-height:1.6;">
     <p style="font-weight:500;margin:0 0 6px;color:${B.n};">¿Cómo se determina cada estado?</p>
-    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;"><span style="width:10px;height:10px;border-radius:2px;background:${B.f};flex-shrink:0;margin-top:4px;"></span><span><strong style="font-weight:500;color:#1A1A1A;">Cumplido:</strong> tus respues
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;"><span style="width:10px;height:10px;border-radius:2px;background:${B.f};flex-shrink:0;margin-top:4px;"></span><span><strong style="font-weight:500;color:#1A1A1A;">Cumplido:</strong> tus respuestas indican procesos formales, sistemas documentados o prácticas establecidas que cubren este requisito.</span></div>
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;"><span style="width:10px;height:10px;border-radius:2px;background:${B.l};flex-shrink:0;margin-top:4px;"></span><span><strong style="font-weight:500;color:#1A1A1A;">Parcial:</strong> hay avances o elementos informales, pero aún no se cumple de forma completa o documentada.</span></div>
+    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:10px;height:10px;border-radius:2px;background:${B.o};flex-shrink:0;margin-top:4px;"></span><span><strong style="font-weight:500;color:#1A1A1A;">Por desarrollar:</strong> no se identificaron evidencias de preparación. Es un punto de partida para tu hoja de ruta.</span></div>
+  </div>
+  ${pH}
+</div>
+<div style="background:${B.c}44;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
+  <p style="font-size:12px;font-weight:500;color:${B.n};margin:0 0 8px;text-transform:uppercase;letter-spacing:.05em;">Resumen de tu perfil</p>
+  ${[{l:"Sector",v:sec},{l:"País",v:S.ld.country},{l:"Principales obstáculos",v:Array.isArray(S.ans.P18)?S.ans.P18.map(i=>QS[17].opts[i].t).join("; "):"—"},{l:"Horizonte deseado",v:S.ans.P20!==undefined?QS[19].opts[S.ans.P20].t:"—"}].map(({l,v})=>`<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;gap:12px;"><span style="color:#6B7280;flex-shrink:0;">${l}</span><span style="font-weight:500;text-align:right;">${v}</span></div>`).join("")}
+</div>
+${!S.gate&&!S.sent&&!S.dec?`
+<div style="background:${B.f};border-radius:12px;padding:1.5rem;text-align:center;margin-bottom:1rem;">
+  <p style="font-size:11px;font-weight:500;color:${B.l};margin:0 0 6px;text-transform:uppercase;letter-spacing:.05em;">Siguiente paso</p>
+  <h3 style="font-family:var(--serif);font-size:18px;font-weight:500;margin:0 0 8px;color:${B.c};">¿Te gustaría profundizar en tu diagnóstico?</h3>
+  <p style="font-size:13px;color:${B.c}aa;line-height:1.5;margin:0 0 1rem;">Podemos agendar una sesión gratuita de 20 minutos donde revisamos cada pilar con recomendaciones específicas para tu sector y tu país.</p>
+  <button id="og" style="background:${B.l};color:${B.f};border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:500;">Sí, me interesa</button>
+  <div style="margin-top:10px;"><button id="dd" style="font-size:13px;color:${B.c}88;background:none;border:none;">No por ahora, gracias</button></div>
+</div>`:""}
+${S.dec?`
+<div style="background:${B.c}66;border-radius:12px;padding:1.25rem;text-align:center;margin-bottom:1rem;">
+  <p style="font-size:14px;font-weight:500;margin:0 0 6px;">Gracias por completar el diagnóstico</p>
+  <p style="font-size:13px;color:#6B7280;margin:0 0 8px;line-height:1.5;">Tu perfil ha sido registrado. Si en el futuro deseas profundizar, estaremos disponibles.</p>
+  <p style="font-size:13px;color:${B.f};margin:0;">Escríbenos a: <strong>info@lianacr.com</strong></p>
+</div>`:""}
+${S.gate&&!S.sent?`
+<div id="contact-form" style="background:#fff;border:2px solid ${B.f};border-radius:12px;padding:1.25rem;margin-bottom:1rem;">
+  <h3 style="font-size:16px;font-weight:500;margin:0 0 12px;">Completa tus datos para agendar la sesión</h3>
+  <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">Correo electrónico</span><input id="d-email" type="email" placeholder="tu@correo.com" value="${S.dp.email||S.ld.email}" readonly style="background:#F3F4F6;cursor:not-allowed;"></label>
+  ${S.ld.country==="Otro país"?`<label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">País</span><input id="d-country-custom" type="text" placeholder="Escribe tu país" value="${S.dp.customCountry||""}" style="background:#fff;"></label>`:`<label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">País</span><input type="text" value="${S.ld.country}" readonly style="background:#F3F4F6;cursor:not-allowed;"></label>`}
+  ${[{k:"name",l:"Nombre completo",ph:"Tu nombre completo"},{k:"company",l:"Empresa u organización",ph:"Nombre de tu organización"},{k:"role",l:"Cargo o función",ph:"Ej: Gerente de sostenibilidad, Director financiero"}].map(f=>`<label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">${f.l}</span><input id="d-${f.k}" placeholder="${f.ph}" value="${S.dp[f.k]}"></label>`).join("")}
+  <label style="display:block;margin-bottom:12px;"><span style="font-size:12px;font-weight:500;display:block;margin-bottom:3px;">Teléfono o WhatsApp</span>
+    <div style="display:flex;gap:6px;"><span style="background:#F3F4F6;border:1px solid #E5E7EB;border-radius:8px;padding:10px;font-size:13px;display:flex;align-items:center;">${pc}</span><input id="d-phone" type="tel" inputmode="numeric" placeholder="8888 8888" value="${S.dp.phone}"></div>
+  </label>
+  <div id="de" style="font-size:11px;color:var(--err);margin:0 0 8px;display:none;"></div>
+  <button id="sd" style="width:100%;padding:12px;background:${B.f};color:${B.c};border:none;border-radius:8px;font-size:14px;font-weight:500;margin-top:4px;">Solicitar sesión gratuita</button>
+</div>`:""}
+${S.sent?`
+<div style="background:${B.f}0D;border:2px solid ${B.f};border-radius:12px;padding:1.5rem;text-align:center;margin-bottom:1rem;">
+  <h3 style="font-size:16px;font-weight:500;color:${B.f};margin:0 0 6px;">Solicitud recibida</h3>
+  <p style="font-size:13px;color:#555;margin:0;">Te contactaremos en las próximas 24 a 48 horas para coordinar tu sesión.</p>
+</div>`:""}
+<div style="text-align:center;padding:1rem 0 2rem;"><button id="rs" style="font-size:13px;color:#9CA3AF;background:none;border:none;">← Realizar otro diagnóstico</button></div>
+</div>`;
+const og=document.getElementById("og");if(og)og.onclick=()=>{S.gate=true;R();setTimeout(()=>{const form=document.getElementById("contact-form");if(form)form.scrollIntoView({behavior:"smooth",block:"center"})},100)};
+const dd=document.getElementById("dd");if(dd)dd.onclick=()=>{S.dec=true;R(true);setTimeout(()=>{const msg=document.querySelector('[style*="Gracias por completar"]')?.parentElement;if(msg)msg.scrollIntoView({behavior:"smooth",block:"center"})},100)};
+const em=document.getElementById("d-email");if(em){if(!S.dp.email&&S.ld.email)S.dp.email=S.ld.email};
+const cc=document.getElementById("d-country-custom");if(cc)cc.addEventListener("input",e=>S.dp.customCountry=e.target.value);
+["name","company","role"].forEach(k=>{const el=document.getElementById("d-"+k);if(el)el.addEventListener("input",e=>S.dp[k]=e.target.value)});
+const ph=document.getElementById("d-phone");if(ph)ph.addEventListener("input",e=>{e.target.value=e.target.value.replace(/[^0-9\s]/g,"");S.dp.phone=e.target.value});
+const sd=document.getElementById("sd");if(sd)sd.onclick=()=>{const de=document.getElementById("de");if(!S.dp.email||!vE(S.dp.email)){de.textContent="Por favor ingresa un correo electrónico válido.";de.style.display="block";return}if(!S.dp.name||!S.dp.company){de.textContent="Por favor completa al menos tu nombre y empresa.";de.style.display="block";return}const cp=S.dp.phone.replace(/\s/g,"");if(cp&&cp.length<7){de.textContent="El número de teléfono debe tener al menos 7 dígitos.";de.style.display="block";return}S.sent=true;R()};
+document.getElementById("rs").onclick=()=>{S={v:"landing",st:0,ans:{},ld:{email:"",country:""},dp:{email:"",name:"",company:"",role:"",phone:"",customCountry:""},gate:false,sent:false,dec:false,oSec:"",oSup:""};R()}}
+
+R();
+</script>
+</body>
+</html>
